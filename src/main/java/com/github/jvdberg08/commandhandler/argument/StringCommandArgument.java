@@ -1,28 +1,27 @@
 package com.github.jvdberg08.commandhandler.argument;
 
+import org.apache.commons.lang.ArrayUtils;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class StringCommandArgument implements CommandArgument<String> {
 
     private final String[] validArguments;
 
-    public StringCommandArgument(String validArgument) {
-        this.validArguments = new String[]{validArgument};
-    }
-
-    public StringCommandArgument(String validArgument, String... moreValidArguments) {
-        List<String> validArgumentsList = new ArrayList<>();
-        validArgumentsList.add(validArgument);
-        validArgumentsList.addAll(Arrays.asList(moreValidArguments));
-        this.validArguments = validArgumentsList.toArray(new String[0]);
+    public StringCommandArgument(String... validArguments) {
+        if(validArguments == null) {
+            //TODO throw error
+        }
+        this.validArguments = Stream.of(validArguments).map(String::toLowerCase).toArray(String[]::new);
     }
 
     @Override
     public boolean checkArgument(String commandArgument, Object[] previousArguments) {
-        return Arrays.stream(validArguments).map(String::toLowerCase).collect(Collectors.toList()).contains(commandArgument.toLowerCase());
+        return ArrayUtils.contains(validArguments, commandArgument.toLowerCase());
     }
 
     @Override
