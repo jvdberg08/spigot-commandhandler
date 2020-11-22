@@ -1,7 +1,5 @@
 package com.github.jvdberg08.commandhandler.argument;
 
-import org.apache.commons.lang.ArrayUtils;
-
 import java.util.Arrays;
 
 public class EnumCommandArgument implements CommandArgument<Enum<?>> {
@@ -17,7 +15,7 @@ public class EnumCommandArgument implements CommandArgument<Enum<?>> {
 
     @Override
     public boolean checkArgument(String commandArgument, Object[] previousArguments) {
-        return ArrayUtils.isEmpty(validArgumentHolders) || Arrays.stream(validArgumentHolders).map(Enum::toString).anyMatch(commandArgument::equalsIgnoreCase);
+        return Arrays.stream(validArgumentHolders).map(Enum::toString).anyMatch(commandArgument::equalsIgnoreCase);
     }
 
     @Override
