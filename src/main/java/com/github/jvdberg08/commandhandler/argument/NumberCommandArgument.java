@@ -1,6 +1,5 @@
 package com.github.jvdberg08.commandhandler.argument;
 
-import com.google.common.collect.ImmutableList;
 import org.bukkit.command.CommandSender;
 
 import java.text.NumberFormat;
