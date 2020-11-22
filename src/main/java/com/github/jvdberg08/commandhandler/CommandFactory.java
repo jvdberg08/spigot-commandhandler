@@ -5,16 +5,19 @@ import com.github.jvdberg08.commandhandler.command.Command;
 import com.github.jvdberg08.commandhandler.command.CommandNotDefinedException;
 import com.github.jvdberg08.commandhandler.command.CommandSyntax;
 import com.github.jvdberg08.commandhandler.command.HelpCommand;
+import com.google.common.collect.ImmutableList;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.PluginCommand;
+import org.bukkit.command.TabExecutor;
 import org.bukkit.entity.Player;
+import org.bukkit.util.StringUtil;
 
 import java.util.*;
 
-public class CommandFactory implements CommandExecutor {
+public class CommandFactory implements CommandExecutor, TabExecutor {
 
     private final String main;
     private final Map<String, Command> commands = new HashMap<>();
@@ -27,6 +30,7 @@ public class CommandFactory implements CommandExecutor {
             throw new CommandNotDefinedException("Command \"" + main + "\" is not defined.");
         }
         pluginCommand.setExecutor(this);
+        pluginCommand.setTabCompleter(this);
         Bukkit.getLogger().info("CommandFactory \"" + main + "\" has been created!");
 
         registerCommand(new HelpCommand("help", this));
@@ -90,6 +94,46 @@ public class CommandFactory implements CommandExecutor {
         return false;
     }
 
+    @Override
+    public List<String> onTabComplete(CommandSender sender, org.bukkit.command.Command cmd, String s, String[] args) {
+        if (!cmd.getName().equalsIgnoreCase(main)) return ImmutableList.of();
+
+        if (args.length == 1) {
+            return tabCompleteCommands(args);
+        }
+
+        String commandName = args[0];
+        Command command = commands.get(commandName);
+        if (command == null) {
+            return tabCompleteCommands(args);
+        }
+
+        args = Arrays.copyOfRange(args, 1, args.length);
+
+        if (args.length == 0) return ImmutableList.of();
+
+        for (CommandSyntax commandSyntax : command.getValidSyntaxes()) {
+
+            List<CommandArgument<?>> commandArguments = commandSyntax.getCommandArguments();
+            if (args.length != commandArguments.size()) {
+                continue;
+            }
+
+            if (!commandSyntax.isConsoleAllowed() && !(sender instanceof Player)) {
+                continue;
+            }
+
+            List<String> completion = commandArguments.get(args.length - 1).tabComplete(sender);
+
+            return completion == null ? ImmutableList.of()
+                    : StringUtil.copyPartialMatches(args[args.length - 1],
+                            completion,
+                            new ArrayList<>());
+        }
+
+        return ImmutableList.of();
+    }
+
     public void showHelp(CommandSender sender, String[] args) {
         Command helpCommand = commands.get("help");
         if (helpCommand == null) {
@@ -112,5 +156,17 @@ public class CommandFactory implements CommandExecutor {
 
     public Map<String, Command> getCommands() {
         return commands;
+    }
+
+    private List<String> tabCompleteCommands(String[] args) {
+        List<String> list = new ArrayList<>(commands.size());
+
+        for (Map.Entry<String, Command> entry : commands.entrySet()) {
+            String name = entry.getKey();
+            if (name.startsWith(args[0]))
+                list.add(name);
+        }
+
+        return list;
     }
 }

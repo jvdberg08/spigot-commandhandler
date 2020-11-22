@@ -1,5 +1,9 @@
 package com.github.jvdberg08.commandhandler.argument;
 
+import org.bukkit.command.CommandSender;
+
+import java.util.List;
+
 public class StringCommandArgument implements CommandArgument<String> {
 
     private final String validArgument;
@@ -18,4 +22,8 @@ public class StringCommandArgument implements CommandArgument<String> {
         return commandArgument;
     }
 
+    @Override
+    public List<String> tabComplete(CommandSender sender) {
+        return null;
+    }
 }

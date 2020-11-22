@@ -1,5 +1,10 @@
 package com.github.jvdberg08.commandhandler.argument;
 
+import com.google.common.collect.ImmutableList;
+import org.bukkit.command.CommandSender;
+
+import java.util.List;
+
 public class BooleanCommandArgument implements CommandArgument<Boolean> {
 
     @Override
@@ -10,5 +15,10 @@ public class BooleanCommandArgument implements CommandArgument<Boolean> {
     @Override
     public Boolean getArgument(String commandArgument, Object[] previousArguments) {
         return Boolean.valueOf(commandArgument);
+    }
+
+    @Override
+    public List<String> tabComplete(CommandSender sender) {
+        return ImmutableList.of("false", "true");
     }
 }
