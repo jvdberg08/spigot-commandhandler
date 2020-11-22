@@ -1,20 +1,21 @@
 package com.github.jvdberg08.commandhandler.argument;
 
-import org.bukkit.command.CommandSender;
-
-import java.util.List;
+import java.util.Arrays;
 
 public class StringCommandArgument implements CommandArgument<String> {
 
-    private final String validArgument;
+    private final String[] validArguments;
 
-    public StringCommandArgument(String validArgument) {
-        this.validArgument = validArgument;
+    public StringCommandArgument(String... validArguments) {
+        if(validArguments.length == 0){
+            throw new IllegalArgumentException("StringCommandArgument can not have no valid argument value.");
+        }
+        this.validArguments = validArguments;
     }
 
     @Override
     public boolean checkArgument(String commandArgument, Object[] previousArguments) {
-        return commandArgument.equalsIgnoreCase(validArgument);
+        return Arrays.stream(validArguments).anyMatch(commandArgument::equalsIgnoreCase);
     }
 
     @Override
@@ -22,8 +23,4 @@ public class StringCommandArgument implements CommandArgument<String> {
         return commandArgument;
     }
 
-    @Override
-    public List<String> tabComplete(CommandSender sender) {
-        return null;
-    }
 }
