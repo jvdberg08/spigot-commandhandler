@@ -9,6 +9,9 @@ public class EnumCommandArgument implements CommandArgument<Enum<?>> {
     private final Enum<?>[] validArgumentHolders;
 
     public EnumCommandArgument(Enum<?>... validArgumentHolders) {
+        if (validArgumentHolders.length == 0) {
+            throw new IllegalArgumentException("EnumCommandArgument can not have no valid argument value.");
+        }
         this.validArgumentHolders = validArgumentHolders;
     }
 
