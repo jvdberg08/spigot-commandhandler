@@ -1,6 +1,10 @@
 package com.github.jvdberg08.commandhandler.argument;
 
+import org.bukkit.command.CommandSender;
+
 import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class EnumCommandArgument implements CommandArgument<Enum<?>> {
 
@@ -21,5 +25,10 @@ public class EnumCommandArgument implements CommandArgument<Enum<?>> {
     @Override
     public Enum<?> getArgument(String commandArgument, Object[] previousArguments) {
         return Arrays.stream(validArgumentHolders).filter(enumVariable -> enumVariable.toString().equalsIgnoreCase(commandArgument)).findFirst().orElse(null);
+    }
+
+    @Override
+    public List<String> tabComplete(CommandSender sender, String[] args) {
+        return Arrays.stream(validArgumentHolders).map(Enum::toString).filter(s -> s.toLowerCase().startsWith(args[args.length - 1].toLowerCase())).collect(Collectors.toList());
     }
 }

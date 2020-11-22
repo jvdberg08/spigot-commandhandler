@@ -18,7 +18,7 @@ public class BooleanCommandArgument implements CommandArgument<Boolean> {
     }
 
     @Override
-    public List<String> tabComplete(CommandSender sender) {
-        return ImmutableList.of("false", "true");
+    public List<String> tabComplete(CommandSender sender, String[] args) {
+        return ImmutableList.of("true", "false");
     }
 }

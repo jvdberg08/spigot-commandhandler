@@ -4,8 +4,8 @@ import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class PlayerCommandArgument implements CommandArgument<Player> {
 
@@ -20,11 +20,7 @@ public class PlayerCommandArgument implements CommandArgument<Player> {
     }
 
     @Override
-    public List<String> tabComplete(CommandSender sender) {
-        List<String> names = new ArrayList<>(Bukkit.getOnlinePlayers().size());
-        for (Player player : Bukkit.getOnlinePlayers()) {
-            names.add(player.getName());
-        }
-        return names;
+    public List<String> tabComplete(CommandSender sender, String[] args) {
+        return Bukkit.getOnlinePlayers().stream().map(Player::getName).filter(name -> name.toLowerCase().startsWith(args[args.length - 1])).collect(Collectors.toList());
     }
 }

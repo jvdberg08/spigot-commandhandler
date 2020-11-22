@@ -8,16 +8,15 @@ import com.github.jvdberg08.commandhandler.command.HelpCommand;
 import com.google.common.collect.ImmutableList;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.PluginCommand;
 import org.bukkit.command.TabExecutor;
 import org.bukkit.entity.Player;
-import org.bukkit.util.StringUtil;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
-public class CommandFactory implements CommandExecutor, TabExecutor {
+public class CommandFactory implements TabExecutor {
 
     private final String main;
     private final Map<String, Command> commands = new HashMap<>();
@@ -99,23 +98,20 @@ public class CommandFactory implements CommandExecutor, TabExecutor {
         if (!cmd.getName().equalsIgnoreCase(main)) return ImmutableList.of();
 
         if (args.length == 1) {
-            return tabCompleteCommands(args);
+            return getCommandsStartingWith(args[0]);
         }
 
         String commandName = args[0];
         Command command = commands.get(commandName);
         if (command == null) {
-            return tabCompleteCommands(args);
+            return new ArrayList<>();
         }
 
         args = Arrays.copyOfRange(args, 1, args.length);
-
-        if (args.length == 0) return ImmutableList.of();
-
         for (CommandSyntax commandSyntax : command.getValidSyntaxes()) {
 
             List<CommandArgument<?>> commandArguments = commandSyntax.getCommandArguments();
-            if (args.length != commandArguments.size()) {
+            if (args.length > commandArguments.size()) {
                 continue;
             }
 
@@ -123,14 +119,8 @@ public class CommandFactory implements CommandExecutor, TabExecutor {
                 continue;
             }
 
-            List<String> completion = commandArguments.get(args.length - 1).tabComplete(sender);
-
-            return completion == null ? ImmutableList.of()
-                    : StringUtil.copyPartialMatches(args[args.length - 1],
-                            completion,
-                            new ArrayList<>());
+            return commandArguments.get(args.length - 1).tabComplete(sender, args);
         }
-
         return ImmutableList.of();
     }
 
@@ -158,15 +148,7 @@ public class CommandFactory implements CommandExecutor, TabExecutor {
         return commands;
     }
 
-    private List<String> tabCompleteCommands(String[] args) {
-        List<String> list = new ArrayList<>(commands.size());
-
-        for (Map.Entry<String, Command> entry : commands.entrySet()) {
-            String name = entry.getKey();
-            if (name.startsWith(args[0]))
-                list.add(name);
-        }
-
-        return list;
+    private List<String> getCommandsStartingWith(String string) {
+        return commands.keySet().stream().filter(name -> name.toLowerCase().startsWith(string.toLowerCase())).collect(Collectors.toList());
     }
 }

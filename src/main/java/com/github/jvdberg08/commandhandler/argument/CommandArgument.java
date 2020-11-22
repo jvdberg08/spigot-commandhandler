@@ -10,6 +10,6 @@ public interface CommandArgument<T> {
 
     T getArgument(String commandArgument, Object[] previousArguments);
 
-    List<String> tabComplete(CommandSender sender);
+    List<String> tabComplete(CommandSender sender, String[] args);
 
 }

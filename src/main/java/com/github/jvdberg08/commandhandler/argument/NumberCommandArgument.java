@@ -1,5 +1,6 @@
 package com.github.jvdberg08.commandhandler.argument;
 
+import com.google.common.collect.ImmutableList;
 import org.bukkit.command.CommandSender;
 
 import java.text.NumberFormat;
@@ -29,7 +30,7 @@ public class NumberCommandArgument implements CommandArgument<Number> {
     }
 
     @Override
-    public List<String> tabComplete(CommandSender sender) {
-        return null;
+    public List<String> tabComplete(CommandSender sender, String[] args) {
+        return ImmutableList.of("1", "4", "8", "16", "32", "64");
     }
 }
