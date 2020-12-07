@@ -1,12 +1,10 @@
 package com.github.jvdberg08.commandhandler.command;
 
-import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
+import com.github.jvdberg08.commandhandler.argument.StringCommandArgument;
 
-public abstract class SubCommand {
+public abstract class SubCommand extends StringCommandArgument implements CommandExecutable {
 
-    abstract boolean onConsoleCommand(CommandSender sender, Object[] args, int syntaxUsed);
-
-    abstract boolean onPlayerCommand(Player sender, Object[] args, int syntaxUsed);
-
+    public SubCommand(String validArgument, String... validArguments) {
+        super(validArgument, validArguments);
+    }
 }

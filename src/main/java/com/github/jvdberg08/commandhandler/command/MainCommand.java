@@ -8,7 +8,7 @@ import org.bukkit.entity.Player;
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class MainCommand extends SubCommand {
+public abstract class MainCommand implements CommandExecutable {
 
     private final String name;
     private final CommandFactory commandFactory;
@@ -19,12 +19,17 @@ public abstract class MainCommand extends SubCommand {
         this.commandFactory = commandFactory;
     }
 
+    public CommandSyntax addCommandSyntax(String usage) {
+        CommandSyntax syntax = new CommandSyntax(usage);
+        validSyntaxes.add(syntax);
+        return syntax;
+    }
+
     public boolean onCommand(CommandSender sender, String[] args) {
 
         syntaxloop:
         for (CommandSyntax syntax : validSyntaxes) {
             List<CommandArgument<?>> arguments = syntax.getCommandArguments();
-
             if (arguments.size() != args.length) {
                 continue;
             }
@@ -32,9 +37,11 @@ public abstract class MainCommand extends SubCommand {
                 continue;
             }
 
-            SubCommand subCommand = null;
+            CommandExecutable commandExecutable;
             if (arguments.size() > 0 && arguments.get(0) instanceof SubCommand) {
-                subCommand = (SubCommand) arguments.get(0);
+                commandExecutable = (SubCommand) arguments.get(0);
+            } else {
+                commandExecutable = this;
             }
 
             Object[] parsedArguments = new Object[arguments.size()];
@@ -49,23 +56,14 @@ public abstract class MainCommand extends SubCommand {
             }
 
             int syntaxUsed = validSyntaxes.indexOf(syntax);
-            if (subCommand == null) {
-                if (sender instanceof Player) {
-                    return onPlayerCommand((Player) sender, parsedArguments, syntaxUsed);
-                }
-                return onConsoleCommand(sender, parsedArguments, syntaxUsed);
-            }
-
-
             if (sender instanceof Player) {
-                return subCommand.onPlayerCommand((Player) sender, parsedArguments, syntaxUsed);
+                return commandExecutable.onPlayerCommand((Player) sender, parsedArguments, syntaxUsed);
             }
-            return subCommand.onConsoleCommand(sender, parsedArguments, syntaxUsed);
+            return commandExecutable.onConsoleCommand(sender, parsedArguments, syntaxUsed);
         }
 
         return false;
     }
-
 
     public String getName() {
         return name;
