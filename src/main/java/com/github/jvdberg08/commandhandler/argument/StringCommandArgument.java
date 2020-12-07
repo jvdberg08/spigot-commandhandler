@@ -2,6 +2,7 @@ package com.github.jvdberg08.commandhandler.argument;
 
 import org.bukkit.command.CommandSender;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -10,11 +11,11 @@ public class StringCommandArgument implements CommandArgument<String> {
 
     private final String[] validArguments;
 
-    public StringCommandArgument(String... validArguments) {
-        if (validArguments.length == 0) {
-            throw new IllegalArgumentException("StringCommandArgument can not have no valid argument value.");
-        }
-        this.validArguments = validArguments;
+    public StringCommandArgument(String validArgument, String... validArguments) {
+        List<String> list = new ArrayList<>();
+        list.add(validArgument);
+        list.addAll(Arrays.asList(validArguments));
+        this.validArguments = list.toArray(new String[0]);
     }
 
     @Override
