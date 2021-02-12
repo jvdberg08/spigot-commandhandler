@@ -8,12 +8,12 @@ import java.util.List;
 public class BooleanCommandArgument implements CommandArgument<Boolean> {
 
     @Override
-    public boolean checkArgument(String commandArgument, Object[] previousArguments) {
+    public boolean checkArgument(String commandArgument, List<Object> previousArguments) {
         return commandArgument.equalsIgnoreCase("true") || commandArgument.equalsIgnoreCase("false");
     }
 
     @Override
-    public Boolean getArgument(String commandArgument, Object[] previousArguments) {
+    public Boolean getArgument(String commandArgument, List<Object> previousArguments) {
         return Boolean.valueOf(commandArgument);
     }
 
