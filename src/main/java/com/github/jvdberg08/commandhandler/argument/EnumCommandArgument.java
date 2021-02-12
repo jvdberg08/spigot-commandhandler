@@ -17,12 +17,12 @@ public class EnumCommandArgument implements CommandArgument<Enum<?>> {
     }
 
     @Override
-    public boolean checkArgument(String commandArgument, Object[] previousArguments) {
+    public boolean checkArgument(String commandArgument, List<Object> previousArguments) {
         return Arrays.stream(validArgumentHolders).map(Enum::toString).anyMatch(commandArgument::equalsIgnoreCase);
     }
 
     @Override
-    public Enum<?> getArgument(String commandArgument, Object[] previousArguments) {
+    public Enum<?> getArgument(String commandArgument, List<Object> previousArguments) {
         return Arrays.stream(validArgumentHolders).filter(enumVariable -> enumVariable.toString().equalsIgnoreCase(commandArgument)).findFirst().orElse(null);
     }
 

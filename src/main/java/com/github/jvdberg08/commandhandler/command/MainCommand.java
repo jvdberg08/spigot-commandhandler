@@ -44,7 +44,7 @@ public abstract class MainCommand implements CommandExecutable {
                 commandExecutable = this;
             }
 
-            Object[] parsedArguments = new Object[arguments.size()];
+            List<Object> parsedArguments = new ArrayList<>();
             for (int i = 0; i < arguments.size(); i++) {
                 CommandArgument<?> commandArgument = arguments.get(i);
 
@@ -52,7 +52,7 @@ public abstract class MainCommand implements CommandExecutable {
                     continue syntaxloop;
                 }
 
-                parsedArguments[i] = commandArgument.getArgument(args[i], parsedArguments);
+                parsedArguments.add(commandArgument.getArgument(args[i], parsedArguments));
             }
 
             int syntaxUsed = validSyntaxes.indexOf(syntax);

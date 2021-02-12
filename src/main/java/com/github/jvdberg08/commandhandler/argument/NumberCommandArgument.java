@@ -10,7 +10,7 @@ import java.util.List;
 public class NumberCommandArgument implements CommandArgument<Number> {
 
     @Override
-    public boolean checkArgument(String commandArgument, Object[] previousArguments) {
+    public boolean checkArgument(String commandArgument, List<Object> previousArguments) {
         try {
             NumberFormat.getInstance().parse(commandArgument);
         } catch (ParseException e) {
@@ -20,7 +20,7 @@ public class NumberCommandArgument implements CommandArgument<Number> {
     }
 
     @Override
-    public Number getArgument(String commandArgument, Object[] previousArguments) {
+    public Number getArgument(String commandArgument, List<Object> previousArguments) {
         try {
             return NumberFormat.getInstance().parse(commandArgument);
         } catch (ParseException e) {
