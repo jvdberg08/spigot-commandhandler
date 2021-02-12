@@ -6,9 +6,9 @@ import java.util.List;
 
 public interface CommandArgument<T> {
 
-    boolean checkArgument(String commandArgument, Object[] previousArguments);
+    boolean checkArgument(String commandArgument, List<Object> previousArguments);
 
-    T getArgument(String commandArgument, Object[] previousArguments);
+    T getArgument(String commandArgument, List<Object> previousArguments);
 
     List<String> tabComplete(CommandSender sender, String[] args);
 

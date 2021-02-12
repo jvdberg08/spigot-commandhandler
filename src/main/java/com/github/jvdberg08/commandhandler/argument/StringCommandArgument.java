@@ -19,12 +19,12 @@ public class StringCommandArgument implements CommandArgument<String> {
     }
 
     @Override
-    public boolean checkArgument(String commandArgument, Object[] previousArguments) {
+    public boolean checkArgument(String commandArgument, List<Object> previousArguments) {
         return Arrays.stream(validArguments).anyMatch(commandArgument::equalsIgnoreCase);
     }
 
     @Override
-    public String getArgument(String commandArgument, Object[] previousArguments) {
+    public String getArgument(String commandArgument, List<Object> previousArguments) {
         return commandArgument;
     }
 

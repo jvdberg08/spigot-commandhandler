@@ -10,12 +10,12 @@ import java.util.stream.Collectors;
 public class PlayerCommandArgument implements CommandArgument<Player> {
 
     @Override
-    public boolean checkArgument(String commandArgument, Object[] previousArguments) {
+    public boolean checkArgument(String commandArgument, List<Object> previousArguments) {
         return Bukkit.getPlayer(commandArgument) != null;
     }
 
     @Override
-    public Player getArgument(String commandArgument, Object[] previousArguments) {
+    public Player getArgument(String commandArgument, List<Object> previousArguments) {
         return Bukkit.getPlayer(commandArgument);
     }
 
